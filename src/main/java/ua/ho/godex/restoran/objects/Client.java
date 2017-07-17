@@ -1,4 +1,4 @@
-package objects;
+package ua.ho.godex.restoran.objects;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,18 +10,28 @@ import java.util.Random;
  * Project: testRestoran
  */
 public class Client {
-    Integer waitTime;
-    Integer eatTime;
+    private Integer waitTime;
+    private Integer eatTime;
 
-    static final int WAIT_MIN = 5;
-    static final int WAIT_MAX = 120;
+    static final int WAIT_MIN = 2;
+    static final int WAIT_MAX = 15;
     static final int EAT_MIN = 10;
     static final int EAT_MAX = 40;
     static Random gen = new Random();
+    boolean wait;
 
     public Client() {
+        this.wait=true;
         this.waitTime = gen.nextInt(WAIT_MAX - WAIT_MIN) + WAIT_MIN;
         this.eatTime = gen.nextInt(EAT_MAX - EAT_MIN) + EAT_MIN;
+    }
+
+    public boolean isWait() {
+        return wait;
+    }
+
+    public void setWait(boolean wait) {
+        this.wait = wait;
     }
 
     @Override
@@ -44,4 +54,19 @@ public class Client {
         return retList;
     }
 
+    public Integer getWaitTime() {
+        return waitTime;
+    }
+
+    public void setWaitTime(Integer waitTime) {
+        this.waitTime = waitTime;
+    }
+
+    public Integer getEatTime() {
+        return eatTime;
+    }
+
+    public void setEatTime(Integer eatTime) {
+        this.eatTime = eatTime;
+    }
 }
