@@ -1,16 +1,11 @@
 package ua.ho.godex.restoran;
 
-import ua.ho.godex.restoran.objects.Client;
 import ua.ho.godex.restoran.objects.Display;
 import ua.ho.godex.restoran.objects.Manager;
-import ua.ho.godex.restoran.objects.Table;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Creator: Pavlenko Bohdan
@@ -28,6 +23,9 @@ public class Restoran {
     public static void main(String[] args) throws IOException, InterruptedException {
 
 
+
+/*
+
         List<Client> clients = Client.createNewClients(5);
         List<Table> tables =Table.createTables(5);
         display = new Display(clients,tables);
@@ -41,5 +39,8 @@ public class Restoran {
         managerThread.start();                //Запуск потока
 
         consoleReader.readLine();
+        */
+
     }
+
 }
