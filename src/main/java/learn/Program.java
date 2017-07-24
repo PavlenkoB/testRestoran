@@ -42,17 +42,17 @@ class Incremenator extends Thread {
 class ShowMassage extends Thread {
     volatile List<String> msgQueue = new ArrayList<>();
 
-    int inc=0;
     @Override
     public void run() {
         do {
-            if (!Thread.interrupted()) {
-                while (!hasMessages()){
-                    Thread.yield();
-                    inc++;
+            if (!Thread.interrupted() ) {
+                if (hasMessages()) {
+                    showMassage();
                 }
-                showMassage();
             } else {
+                while (hasMessages()) {
+                    showMassage();
+                }
                 return;
             }
         } while (true);
@@ -63,8 +63,7 @@ class ShowMassage extends Thread {
     }
 
     void showMassage() {
-        System.out.println(inc+"="+msgQueue.remove(0));
-        inc=0;
+        System.out.println(msgQueue.remove(0));
     }
 
     public void addMessage(String string) {
@@ -84,17 +83,16 @@ class Program {
 
         mSM.start();    //Запуск потока
 
-
         System.out.println("Start main");
         //Троекратное изменение действия инкременатора
         //с интервалом в i*2 секунд
-        for (int i = 1; i <= 6; i++) {
+        for (int i = 1; i <= 28; i++) {
             try {
                 mSM.addMessage("increment =" + i++);
                 mSM.addMessage("increment =" + i);
                 System.out.println("some text");
-                Thread.sleep(1000);        //Ожидание в течении i*2 сек.
-            } catch (InterruptedException e) {
+                Thread.yield();
+            } catch (Exception e) {
             }
         }
         mSM.interrupt();

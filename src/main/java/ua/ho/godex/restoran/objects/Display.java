@@ -29,6 +29,11 @@ public class Display implements Runnable {
     public void run() {
         while (true) {
             clearScreen();
+            System.out.println("Lost clients="+Manager.getLostClient());
+            System.out.println("Served clients="+Manager.getServedClients());
+            if(clientsInWait.size()<5){
+                clientsInWait.addAll(Client.createNewClients(3));
+            }
             for (Client client : clientsInWait) {
                 System.out.println(client.toString());
             }
@@ -37,8 +42,8 @@ public class Display implements Runnable {
             }
 
             try {
-                sleep(1000);
-            } catch (InterruptedException e) {
+                Thread.sleep(1000);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

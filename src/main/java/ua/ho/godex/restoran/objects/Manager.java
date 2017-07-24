@@ -12,33 +12,59 @@ import static java.lang.Thread.sleep;
 public class Manager implements Runnable {
     List<Client> clientsInWait;
     List<Table> tables;
-    Client tmpClient;
+    static Integer lostClient=0;
+    static Integer servedClients=0;
+
     public Manager(List<Client> clientsInWait, List<Table> tables) {
         this.clientsInWait = clientsInWait;
         this.tables = tables;
     }
 
+    public static Integer getLostClient() {
+        return lostClient;
+    }
+
+    public static Integer getServedClients() {
+        return servedClients;
+    }
+
+    public static void setServedClients(Integer servedClients) {
+        Manager.servedClients = servedClients;
+    }
+
     @Override
     public void run() {
+        Client tmpClient;
         System.out.println("Привет из Manager!");
-            while (true) {
-                try {
-                    sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                for (int counter=0;counter<clientsInWait.size();counter++) {
-                    tmpClient=clientsInWait.get(counter);
-                    if(tmpClient.getWaitTime()<1){
-                        clientsInWait.remove(counter);
-                    }
-                    tmpClient.setWaitTime(tmpClient.getWaitTime()-1);
-                }
-                /*
-                for (Table table : tables) {
-                    System.out.println(table.toString());
-                }*/
-
+        while (true) {
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+            //отнять по секунде в очереди
+            for (int counter = 0; counter < clientsInWait.size(); counter++) {
+                tmpClient = clientsInWait.get(counter);
+                tmpClient.setWaitTime(tmpClient.getWaitTime() - 1);
+                if (tmpClient.getWaitTime() < 1) {
+                    clientsInWait.remove(counter);
+                    lostClient++;
+                }
+            }
+            //отнять по секунде в сидячих
+            for (Table table : tables) {
+                if (table.isAvailable() && clientsInWait.size() > 0) {
+                    table.sitClient(clientsInWait.remove(0));
+                } else {
+                    Client client = table.getClient();
+                    client.setEatTime(client.getEatTime() - 1);
+                    if (client.getEatTime() < 1) {
+                        servedClients++;
+                        table.freeTable();
+                        table.sitClient(clientsInWait.remove(0));
+                    }
+                }
+            }
+        }
     }
 }

@@ -12,15 +12,19 @@ import java.util.Random;
 public class Client {
     private Integer waitTime;
     private Integer eatTime;
+    private Integer id;
 
     static final int WAIT_MIN = 2;
     static final int WAIT_MAX = 15;
-    static final int EAT_MIN = 10;
-    static final int EAT_MAX = 40;
+    static final int EAT_MIN = 4;
+    static final int EAT_MAX = 30;
     static Random gen = new Random();
     boolean wait;
 
+    static Integer newID=1;
+
     public Client() {
+        this.id=newID++;
         this.wait=true;
         this.waitTime = gen.nextInt(WAIT_MAX - WAIT_MIN) + WAIT_MIN;
         this.eatTime = gen.nextInt(EAT_MAX - EAT_MIN) + EAT_MIN;
@@ -34,10 +38,15 @@ public class Client {
         this.wait = wait;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "Client{" +
-                "waitTime=" + waitTime +
+                "id=" + id +
+                ", waitTime=" + waitTime +
                 ", eatTime=" + eatTime +
                 '}';
     }

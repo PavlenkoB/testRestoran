@@ -9,25 +9,19 @@ import java.util.List;
  * Project: testRestoran
  */
 public class Table {
-    static int number=1;
-    private  int tNumber;
-    private boolean available;
+    static int number = 1;
+    private int tNumber;
     private Client client;
 
     public Table() {
-        this.available =true;
-        this.tNumber=number++;
+        this.tNumber = number++;
     }
 
     public boolean isAvailable() {
-        return available;
+        return this.client == null;
     }
 
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
-
-    public static List<Table> createTables(int count){
+    public static List<Table> createTables(int count) {
         List<Table> retList = new ArrayList<>(count);
         for (int counter = 0; counter < count; counter++) {
             retList.add(new Table());
@@ -35,10 +29,22 @@ public class Table {
         return retList;
     }
 
+    public void sitClient(Client client) {
+        this.client = client;
+    }
+
     @Override
     public String toString() {
-        String ret="Table("+tNumber+")=";
-        ret += available ? "available" : "not available";
+        String ret = "Table(" + tNumber + ")=";
+        ret += isAvailable() ? "available" : "not available"+client.toString();
         return ret;
+    }
+
+    public void freeTable() {
+        this.client = null;
+    }
+
+    public Client getClient() {
+        return client;
     }
 }
