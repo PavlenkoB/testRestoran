@@ -10,10 +10,10 @@ import static java.lang.Thread.sleep;
  * Project: testRestoran
  */
 public class Manager implements Runnable {
-    List<Client> clientsInWait;
-    List<Table> tables;
-    static Integer lostClient=0;
-    static Integer servedClients=0;
+    static Integer lostClient = 0;
+    static Integer servedClients = 0;
+    volatile List<Client> clientsInWait;
+    volatile List<Table> tables;
 
     public Manager(List<Client> clientsInWait, List<Table> tables) {
         this.clientsInWait = clientsInWait;
@@ -38,7 +38,7 @@ public class Manager implements Runnable {
         System.out.println("Привет из Manager!");
         while (true) {
             try {
-                sleep(1000);
+                sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -57,13 +57,24 @@ public class Manager implements Runnable {
                     table.sitClient(clientsInWait.remove(0));
                 } else {
                     Client client = table.getClient();
-                    client.setEatTime(client.getEatTime() - 1);
-                    if (client.getEatTime() < 1) {
-                        servedClients++;
-                        table.freeTable();
-                        table.sitClient(clientsInWait.remove(0));
+                    if (client != null) {
+                        client.setEatTime(client.getEatTime() - 1);
+                        if (client.getEatTime() < 1) {
+                            servedClients++;
+                            table.freeTable();
+                            if (clientsInWait.size() > 0) {
+                                table.sitClient(clientsInWait.remove(0));
+                            }
+                        }
                     }
                 }
+            }
+            if (lostClient > 10) {
+                tables.addAll(Table.createTables(1));
+                lostClient = 0;
+            }
+            if ((Client.addNewClient--) < 1) {
+                clientsInWait.addAll(Client.createNewClients(1));
             }
         }
     }

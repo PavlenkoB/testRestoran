@@ -3,6 +3,7 @@ package ua.ho.godex.restoran.objects;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Creator: Pavlenko Bohdan
@@ -21,6 +22,7 @@ public class Client {
     static Random gen = new Random();
     boolean wait;
 
+    static Integer addNewClient = 0;
     static Integer newID=1;
 
     public Client() {
@@ -28,6 +30,7 @@ public class Client {
         this.wait=true;
         this.waitTime = gen.nextInt(WAIT_MAX - WAIT_MIN) + WAIT_MIN;
         this.eatTime = gen.nextInt(EAT_MAX - EAT_MIN) + EAT_MIN;
+        addNewClient = (gen.nextInt(WAIT_MAX - WAIT_MIN) + WAIT_MIN) / 2;
     }
 
     public boolean isWait() {
@@ -56,7 +59,7 @@ public class Client {
     }
 
     public static List<Client> createNewClients(int count) {
-        List<Client> retList = new ArrayList<>(count);
+        List<Client> retList = new CopyOnWriteArrayList<>();
         for (int counter = 0; counter < count; counter++) {
             retList.add(createNewClient());
         }

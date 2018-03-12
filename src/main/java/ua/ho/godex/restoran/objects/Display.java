@@ -6,10 +6,7 @@ package ua.ho.godex.restoran.objects;
  * Project: testRestoran
  */
 
-import java.io.IOException;
 import java.util.List;
-
-import static java.lang.Thread.sleep;
 
 /**
  * display status to console
@@ -17,45 +14,41 @@ import static java.lang.Thread.sleep;
 
 
 public class Display implements Runnable {
-    List<Client> clientsInWait;
-    List<Table> tables;
+    volatile List<Client> clientsInWait;
+    volatile List<Table> tables;
+    Integer addClient = 0;
 
     public Display(List<Client> clientsInWait, List<Table> tables) {
         this.clientsInWait = clientsInWait;
         this.tables = tables;
     }
 
+    public static void clearScreen() {
+        try {
+            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void run() {
         while (true) {
             clearScreen();
-            System.out.println("Lost clients="+Manager.getLostClient());
-            System.out.println("Served clients="+Manager.getServedClients());
-            if(clientsInWait.size()<5){
-                clientsInWait.addAll(Client.createNewClients(3));
-            }
+            System.out.println("Lost clients=" + Manager.getLostClient());
+            System.out.println("Served clients=" + Manager.getServedClients());
+            System.out.println("Next clients=" + Client.addNewClient);
             for (Client client : clientsInWait) {
                 System.out.println(client.toString());
             }
             for (Table table : tables) {
                 System.out.println(table.toString());
             }
-
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    public static void clearScreen()  {
-        try {
-            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

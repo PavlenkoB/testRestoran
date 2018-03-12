@@ -2,6 +2,8 @@ package ua.ho.godex.restoran.objects;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Creator: Pavlenko Bohdan
@@ -22,7 +24,7 @@ public class Table {
     }
 
     public static List<Table> createTables(int count) {
-        List<Table> retList = new ArrayList<>(count);
+        List<Table> retList = new Vector<>(count);
         for (int counter = 0; counter < count; counter++) {
             retList.add(new Table());
         }

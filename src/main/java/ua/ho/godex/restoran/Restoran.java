@@ -26,13 +26,13 @@ public class Restoran {
 
     //static List<Client> clientsInWait=new ArrayList<>();
     public static void main(String[] args) throws IOException, InterruptedException {
-        clients = Client.createNewClients(5);
+
+        clients = Client.createNewClients(10);
         tables = Table.createTables(5);
         display = new Display(clients, tables);
         Thread myThready = new Thread(display);    //Создание потока "display"
         myThready.setDaemon(true);
         myThready.start();                //Запуск потока
-
         manager = new Manager(clients, tables);
         Thread managerThread = new Thread(manager);    //Создание потока "manager"
         managerThread.setDaemon(true);
